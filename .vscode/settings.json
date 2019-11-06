@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "price",
+            "dialect": "PostgreSQL",
+            "name": "price",
+            "password": "123",
+            "port": 5432,
+            "server": "localhost",
+            "username": "postgres"
+        }
+    ]
+}

@@ -6,7 +6,11 @@ class TaskForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            id:'',
+            name:'',
+            status: false
+        };
     }
 
     UNSAFE_componentWillMount() {
@@ -42,17 +46,16 @@ class TaskForm extends Component {
         });
     }
 
-    onHandleSubmit = (event) => {
+    onSave = (event) => {
         event.preventDefault();
-        this.props.onAddTask(this.state)
-        
+
+        this.props.onSaveTask(this.state)
         this.onClear();
         this.onExitForm();
     }
 
     onClear = () => {
         this.setState({
-            id : '',
             name : '',
             status : false
         });
@@ -66,7 +69,7 @@ class TaskForm extends Component {
     render() {
         // console.log('TASK FORM RENDER')
 
-        if(!this.props.isDisplayForm) return ''
+        if(!this.props.isDisplayForm) return null
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
@@ -79,7 +82,7 @@ class TaskForm extends Component {
                     </h3>
                 </div>
                 <div className="panel-body">
-                    <form onSubmit={this.onHandleSubmit} >
+                    <form onSubmit={this.onSave} >
                         <div className="form-group">
                             <label>Tên :</label>
                             <input
@@ -126,12 +129,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onAddTask: (task) => {
-            dispatch(actions.addTask(task))
+        onSaveTask: (task) => {
+            dispatch(actions.saveTask(task))
         },
         onCloseForm: ()=>{
             dispatch(actions.closeForm())
-        }
+        },
+        
     }
 }
 

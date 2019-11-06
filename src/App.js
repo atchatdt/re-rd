@@ -8,132 +8,26 @@ import * as actions from './actions/index'
 
 class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            keyword : '',
-            filterName : '',
-            filterStatus : '-1',
-            itemEditing : null,
-            sortBy : 'name',
-            sortValue : 1
-        };
-    }
-
-   
-
-   
-
-    findIndex = (id) => {
-        var { tasks } = this.state;
-        var result = -1;
-        tasks.forEach((task, index) => {
-            if(task.id === id){
-                result = index;
-            }
-        });
-        return result;
-    }
-
     onToggleForm = () => {
-        // if(this.state.itemEditing !== null){
-        //     this.setState({
-        //         itemEditing : null
-        //     });
-        // }else{
-        //     this.setState({
-        //         isDisplayForm : !this.state.isDisplayForm
-        //     });
-        // }
-        this.props.onToogleForm()
-    }
-
-    // onExitForm = () =>{
-    //     this.setState({
-    //         isDisplayForm : false,
-    //         itemEditing : null
-    //     });
-    // }
-
-    // onDeleteTask = (id) => {
-    //     var { tasks } = this.state;
-    //     var index = this.findIndex(id);
-    //     tasks.splice(index, 1);
-    //     this.setState({
-    //         tasks : tasks
-    //     });
-    //     localStorage.setItem('tasks', JSON.stringify(tasks));
-    //     this.onExitForm();
-    // }
-
-    onSearch = (keyword) => {
-        this.setState({
-            keyword : keyword
-        });
-    }
-
-    onFilter = (filterName, filterStatus) => {
-        this.setState({
-            filterName : filterName,
-            filterStatus : filterStatus
-        });
-    }
-
-    onSelectedItem = (item) => {
-        this.setState({
-            itemEditing : item,
-            isDisplayForm : true
+        
+        let {itemEditing} = this.props
+        if(itemEditing && itemEditing.id !== ''){
+            this.props.onOpenForm()
+        }else {
+            this.props.onToogleForm()
+        }
+        this.props.onClearTask({
+            id:'',
+            name:'',
+            status: false
         })
     }
 
-    onSort = (sortBy, sortValue) => {
-        this.setState({
-            sortBy : sortBy,
-            sortValue : sortValue
-        })
-    }
+
 
     render() {
-        var {
-            filterName,
-            filterStatus,
-            sortBy,
-            sortValue
-        } = this.state;
-
         var {isDisplayForm} = this.props
-        // tasks = tasks.filter((task) => {
-        //     return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
-        // });
 
-        // if(filterName){
-        //     tasks = tasks.filter((task) => {
-        //         return task.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        //     });
-        // }
-        // if(filterStatus){
-        //     tasks = tasks.filter((task) => {
-        //         if(filterStatus === '-1' || filterStatus === -1){
-        //             return task;
-        //         }else{
-        //             return task.status === (parseInt(filterStatus, 10) === 1 ? true : false);
-        //         }
-        //     });
-        // }
-        // if(sortBy === 'name'){
-        //     tasks.sort((a, b) => {
-        //         if(a.name > b.name) return sortValue;
-        //         else if(a.name < b.name) return -sortValue;
-        //         else return 0;
-        //     });
-        // }else{
-        //     tasks.sort((a, b) => {
-        //         if(a.status > b.status) return -sortValue;
-        //         else if(a.status < b.status) return sortValue;
-        //         else return 0;
-        //     });
-        // }
-        // var elmForm = isDisplayForm === true ?  : '';
         return (
             <div className="container">
                 <div className="text-center">
@@ -148,18 +42,8 @@ class App extends Component {
                             <span className="fa fa-plus mr-5"></span>Thêm Công Việc
                         </button>
                         <TaskControl
-                            onSearch={this.onSearch}
-                            onSort={this.onSort}
-                            sortBy={sortBy}
-                            sortValue={sortValue}
                         />
-                        <TaskList
-                            // onDeleteTask={this.onDeleteTask}
-                            filterName={filterName}
-                            filterStatus={filterStatus}
-                            onFilter={this.onFilter}
-                            onSelectedItem={this.onSelectedItem}
-                        />
+                        <TaskList/>
                     </div>
                 </div>
             </div>
@@ -169,7 +53,8 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isDisplayForm: state.isDisplayForm
+        isDisplayForm: state.isDisplayForm,
+        itemEditing: state.itemEditing
     }
 }
 
@@ -177,6 +62,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onToogleForm: () => {
             dispatch(actions.toggleForm())
+        },
+        onClearTask: (task) => {
+            dispatch(actions.editTask(task))
+        },
+        onCloseForm: ()=>{
+            dispatch(actions.closeForm())
+        },
+        onOpenForm: ()=>{
+            dispatch(actions.openForm())
         }
     }
 }

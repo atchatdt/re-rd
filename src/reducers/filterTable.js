@@ -2,17 +2,16 @@ import * as types from '../constants/actiontypes'
 
 
 let initalState = {
-    id: '',
     name: '',
-    status: false
+    status: -1
 }
 
 
 var myReducer = (state = initalState, action) => {
 
     switch (action.type) {
-        case types.EDIT_TASK:
-            return action.task
+        case types.FILTER_TABLE:
+            return action.filter
         default:
             return state
     }
