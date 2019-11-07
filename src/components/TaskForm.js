@@ -48,7 +48,6 @@ class TaskForm extends Component {
 
     onSave = (event) => {
         event.preventDefault();
-
         this.props.onSaveTask(this.state)
         this.onClear();
         this.onExitForm();
